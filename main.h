@@ -7,3 +7,5 @@
 #include <syslog.h>
 
 #include "daemon.h"
+
+void runserver();

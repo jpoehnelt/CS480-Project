@@ -6,7 +6,5 @@
 #include <sys/stat.h>
 #include <syslog.h>
 
-void dameon_run();
-void dameon_signal(int sig_no);
+void dameon_init();
 void dameon_exit();
-void runserver();
