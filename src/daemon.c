@@ -1,29 +1,9 @@
 /**************************
 
 ***************************/
+#include "daemon.h"
 
-
-#include <signal.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <syslog.h>
-
-
-void dameon_run();
-void dameon_signal(int sig_no);
-void dameon_exit();
-void runserver();
-
-int main() {
-	dameon_run();
-
-	return EXIT_SUCCESS;
-}
-
-void dameon_run() {
+void dameon_init() {
 	pid_t pid, sid;
 
 	// Create child process
@@ -64,32 +44,16 @@ void dameon_run() {
 
 
 	// Catch Signals
-	signal(SIGUSR1, dameon_signal);
-
-	runserver();
+	signal(SIGUSR1, dameon_exit);
 
 	return;
 }
 
-void dameon_signal(int sig_no) {
-	// handle different signals here
+void dameon_exit(int sig_no) {
 	syslog (LOG_NOTICE, "Caught Signal: %d", sig_no);
-	if(sig_no == SIGUSR1){
-		dameon_exit();
-	}
-	
-}
-
-void dameon_exit() {
 	syslog(LOG_NOTICE, "Program exiting");
 	closelog ();
 	exit(0);
 
 }
 
-void runserver() {
-	while(1) {
-		syslog(LOG_NOTICE, "Running Server");
-		sleep(5);
-	}
-}
