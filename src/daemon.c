@@ -3,6 +3,7 @@
 ***************************/
 #include "daemon.h"
 
+<<<<<<< Updated upstream
 void dameon_init() {
 	pid_t pid, sid;
 
@@ -48,6 +49,22 @@ void dameon_init() {
 
 	return;
 }
+=======
+
+#include <signal.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <syslog.h>
+
+void dameon_signal(int sig_no);
+void dameon_exit();
+void runserver();
+
+
+>>>>>>> Stashed changes
 
 void dameon_exit(int sig_no) {
 	syslog (LOG_NOTICE, "Caught Signal: %d", sig_no);
