@@ -18,4 +18,8 @@
 
 #include "daemon.h"
 
+#define PORT 8989
+#define NUM_CONNECTIONS 10
+
 void runserver();
+void *handle_client(void *arg);
