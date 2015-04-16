@@ -2,12 +2,23 @@
 int main() {
 	dameon_init();
 	
-    // Run the process code
-    // Wait for 5 seconds and print to the system log
-	while(1) {
-		syslog(LOG_NOTICE, "Running Server");
-		sleep(5);
-	}
+   	runserver();
 
 	return 1;
+}
+
+void runserver() {
+
+	// Make Socket
+
+	// Bind Port to Socket
+
+	// Listen for Connections with Queue 
+
+	WHILE (1) {
+		// Accept Connection
+
+		// Do threading		
+	}
+
 }
