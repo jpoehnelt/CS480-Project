@@ -33,10 +33,11 @@ void runserver() {
     server_address.sin_addr.s_addr = inet_addr("127.0.0.1");
     server_address.sin_port = htons(PORT);
     
-    
-	// Make Socket
-
 	// Bind Port to Socket
+    if((int bind(int server_socket, const struct sockaddr_in *server_address, sizeof(server_address))) != 0) 
+    {
+        // log error
+    }
 
 	// Listen for Connections with Queue 
 
