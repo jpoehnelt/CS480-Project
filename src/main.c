@@ -32,6 +32,21 @@ void runserver() {
 
 		// Do threading		
 	}
+}
 
-     
+void* handle_client(void* arg) {
+    int client_socket = *((int)arg);
+    
+    while (!done) {
+        read(
+        
+        if (input == 'q')
+        {
+            write(client_socket, &input, sizeof(char));
+            break;
+        }
+        
+        write(client_socket, &input, sizeof(char));
+    }
+    // close
 }
