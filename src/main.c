@@ -8,6 +8,16 @@ int main() {
 }
 
 void runserver() {
+    // declare server socket and server address struct
+    int server_socket;
+    struct sockaddr_in server_address;
+
+    // create the socket -- TCP socket
+    server_socket = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_socket == -1) 
+    {
+        printf("Failed to create server socket");
+    }
 
     server_address.sin_family = AF_INET;
     server_address.sin_addr.s_addr = inet_addr("127.0.0.1");
