@@ -1,3 +1,13 @@
+/*
+ Justin Poehnelt
+ Ian Humphrey
+ Tomas Zukowski
+ 
+ CS 480
+ Homework 8
+ 4/19/15
+ */
+
 #include "client.h"
 
 int main() {
@@ -14,6 +24,7 @@ int main() {
     }
     
     // client loop
+    
     
 	return 0;
 }
