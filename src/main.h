@@ -16,6 +16,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <syslog.h>
+#include <string.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <pthread.h>
