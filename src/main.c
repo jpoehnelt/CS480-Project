@@ -68,7 +68,7 @@ void* handle_client(void* arg) {
     syslog (LOG_NOTICE, "Thread created for socket.");
 
     while (1) {
-        read(client_socket, input, 1);
+        read(client_socket, input, sizeof(input));
 
 
         if (*input == 'q')

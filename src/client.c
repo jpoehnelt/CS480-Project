@@ -13,7 +13,7 @@
 int main() {
     
     // arrays to the client and server messages
-    char message[1000] , server_reply[2000];
+    char message[100] , server_reply[100];
     
     // declare server socket and client address struct
     int client_socket;
@@ -36,36 +36,15 @@ int main() {
         printf("Failed to establish connection between the client and server");
     }
     
-    // Bind Port to Socket
-    if (bind(client_socket, (struct sockaddr*)&client_address, sizeof(client_address)) == -1)
-    {
-        syslog (LOG_NOTICE, "Failed to bind client socket");
-        exit(1);
-    }
+    while(1) {
+        scanf("%s", message);
+        write(client_socket, message, sizeof(message));
+        read(client_socket, server_reply, sizeof(server_reply));
+        puts(server_reply);
+        if (message[0] == 'q') break;
+    }     
     
-    
-    do
-    {
-        scanf("%s" , message);
-        
-        if( send(client_socket , message , strlen(message) , 0) < 0)
-        {
-            printf("Send failed");
-            return 1;
-        }
-        
-        //Receive a reply from the server
-        if( recv(client_socket , server_reply , 2000 , 0) < 0)
-        {
-            printf("recv failed");
-            break;
-        }
-        
-        printf("Server reply :");
-        printf(server_reply);
-    }
-    while (1); //message != 'q');
-    
+    close(client_socket);
     return 0;
 }
 
