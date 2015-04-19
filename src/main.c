@@ -27,21 +27,27 @@ void runserver() {
     if (server_socket == -1) 
     {
         printf("Failed to create server socket");
+        exit(1);
     }
 
     server_address.sin_family = AF_INET;
     server_address.sin_addr.s_addr = inet_addr("127.0.0.1");
     server_address.sin_port = htons(PORT);
     
+    socklen_t server_len = sizeof(server_address);
+
 	// Bind Port to Socket
-    if((int bind(int server_socket, const struct sockaddr_in *server_address, sizeof(server_address))) != 0) 
+    int bind(int server_socket, const struct sockaddr* server_address, socklen_t server_len);
+    if(bind != 0) 
     {
-        // log error
+        printf("Failed to create server socket");
+        exit(1);
     }
 
 	// Listen for Connections with Queue 
+    listen(server_socket, NUM_CONNECTIONS);
 
-	WHILE (1) {
+	while (1) {
         int client_socket = accept(server_socket, NULL, NULL);
         
         pthread_t thread;
@@ -56,10 +62,12 @@ void runserver() {
 }
 
 void* handle_client(void* arg) {
-    int client_socket = *((int)arg);
-    
+    int client_socket = (int) arg;
+    int done = 0;
+    char input;
+
     while (!done) {
-        read(
+        read(client_socket, &input, 1);
         
         if (input == 'q')
         {
@@ -70,4 +78,5 @@ void* handle_client(void* arg) {
         write(client_socket, &input, sizeof(char));
     }
     // close
+    exit(0);
 }
