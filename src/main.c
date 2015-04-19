@@ -71,7 +71,7 @@ void* handle_client(void* arg) {
         read(client_socket, input, 1);
 
 
-        if (input[0] == 'q')
+        if (*input == 'q')
         {
             write(client_socket, input, sizeof(input));
             break;
@@ -83,5 +83,5 @@ void* handle_client(void* arg) {
     syslog (LOG_NOTICE, "Closing connection");
     close(client_socket);
 
-    exit(0);
+    pthread_exit(0);
 }
