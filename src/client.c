@@ -26,7 +26,7 @@ int main() {
         syslog (LOG_NOTICE,"Failed to create client socket");
         exit(1);
     }
-    
+    // set up necessary connection information
     client_address.sin_family = AF_INET;
     client_address.sin_addr.s_addr = inet_addr(SERVER_ADDR);
     client_address.sin_port = htons(PORT);
@@ -36,15 +36,23 @@ int main() {
         printf("Failed to establish connection between the client and server");
     }
     
+    // continue connection until user inputs a 'q'
     while(1) {
+        // read in data from stdin
         scanf("%s", message);
+        // write data to server
         write(client_socket, message, sizeof(message));
+        // read data from server
         read(client_socket, server_reply, sizeof(server_reply));
+        // print the data from server to stdout
         puts(server_reply);
+
+        // handle q encounters
         if (strstr(message, "q"))
             break;
     }     
     
+    // client-side connection closing
     close(client_socket);
     return 0;
 }
