@@ -41,7 +41,8 @@ int main() {
         write(client_socket, message, sizeof(message));
         read(client_socket, server_reply, sizeof(server_reply));
         puts(server_reply);
-        if (message[0] == 'q') break;
+        if (strstr(message, "q"))
+            break;
     }     
     
     close(client_socket);

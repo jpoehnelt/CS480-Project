@@ -20,6 +20,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <pthread.h>
+#include <string.h>
 
 #define PORT 8989
 #define SERVER_ADDR "127.0.0.1"
