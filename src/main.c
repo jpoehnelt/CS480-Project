@@ -34,13 +34,10 @@ void runserver() {
     server_address.sin_addr.s_addr = inet_addr("127.0.0.1");
     server_address.sin_port = htons(PORT);
     
-    socklen_t server_len = sizeof(server_address);
-
 	// Bind Port to Socket
-    int bind(int server_socket, const struct sockaddr* server_address, socklen_t server_len);
-    if(bind != 0) 
+    if (bind(server_socket, (struct sockaddr*)&server_address, sizeof(server_address)) == -1) 
     {
-        printf("Failed to create server socket");
+        printf("Failed to bind server socket");
         exit(1);
     }
 
