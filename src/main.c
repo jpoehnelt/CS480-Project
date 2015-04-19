@@ -48,34 +48,36 @@ void runserver() {
 
 	while (1) {
         int client_socket = accept(server_socket, NULL, NULL);
+        // DEBUG syslog(LOG_NOTICE, "SOCKET FD -> %d", client_socket);
         
         pthread_t thread;
         if(pthread_create(&thread, NULL, handle_client, (void*)&client_socket) != 0)
         {
             // log error if there was an issue creating new thread
         }			
+
+        pthread_detach(thread);
 	}
 }
 
 void* handle_client(void* arg) {
-    int client_socket = (int) arg;
-    char input;
+    int client_socket = *(int*) arg;
+
+    // DEBUG syslog(LOG_NOTICE, "handle_client fd -- %d", client_socket);
+    char input[100];
     syslog (LOG_NOTICE, "Thread created for socket.");
 
-    // while (1) {
-    //     read(client_socket, &input, 1);
+    while (1) {
+        read(client_socket, input, 1);
 
-    //     syslog (LOG_NOTICE, "Getting input: %c", input);
 
-    //     if (input == 'q')
-    //     {
-    //         syslog (LOG_NOTICE, "Echoed char: q");
-    //         write(client_socket, &input, sizeof(char));
-    //         break;
-    //     }
-    //     syslog (LOG_NOTICE, "Echoed char.");
-    //     write(client_socket, &input, sizeof(char));
-    // }
+        if (input[0] == 'q')
+        {
+            write(client_socket, input, sizeof(input));
+            break;
+        }
+        write(client_socket, input, sizeof(input));
+    }
     
     // close socket
     syslog (LOG_NOTICE, "Closing connection");
