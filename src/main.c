@@ -84,6 +84,15 @@ void* handle_client(void* arg) {
         // read into input buffer the data from client_socket
         read(client_socket, input, sizeof(input));
 
+        int i;
+        
+        if (sscanf(input, "%d", &i) == 0) 
+        {
+            syslog(LOG_NOTICE, "Could not convert %s to integer.", input);
+        }
+
+        syslog(LOG_NOTICE, "Integer: %d", i);
+
         // still need to write back to client_socket when quitting
         if (strstr(input,"q"))
         {
