@@ -76,7 +76,7 @@ void* handle_client(void* arg) {
     int client_socket = *(int*) arg;
 
     // DEBUG syslog(LOG_NOTICE, "handle_client fd -- %d", client_socket);
-    int input;
+    char input[100];
     syslog (LOG_NOTICE, "Thread created for socket at %d.", client_socket);
 
     // keep communicating until 'q' encountered 
@@ -84,7 +84,8 @@ void* handle_client(void* arg) {
         // read into input buffer the data from client_socket
         read(client_socket, input, sizeof(input));
 
-        if (input == 0)
+        // still need to write back to client_socket when quitting
+        if (strstr(input,"q"))
         {
             write(client_socket, input, sizeof(input));
             break;
