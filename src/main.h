@@ -25,6 +25,9 @@
 
 #define PORT 8989
 #define NUM_CONNECTIONS 10
+#define MEMOIZE_LIMIT 1000
+#define FALSE 0
+#define TRUE !FALSE
 
 void runserver();
 void *handle_client(void *arg);

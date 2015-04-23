@@ -10,7 +10,7 @@
 
 #include "main.h"
 
-int memoized[1000] = {0};
+int computed[MEMOIZE_LIMIT] = {0};
 
 int main() {
     // initialize current process as daemon proces
@@ -97,7 +97,8 @@ void* handle_client(void* arg) {
 
         syslog(LOG_NOTICE, "Integer: %d", i);
 
-        if (i != 0) {
+        // 0 is 0 steps, don't memoize pass 1000 (array out of bounds)
+        if (i != 0 && i <= MEMOIZE_LIMIT) {
             result = three_a_one(i);
         }
 
@@ -122,17 +123,29 @@ void* handle_client(void* arg) {
     pthread_exit(0);
 }
 
+
 int three_a_one(int input) {
     int total_steps = 0;
+    // lookup the memoization for particular input
+    int memoized = computed[input-1];
+    
+    // stop at 1
     while (input != 1) {
+        // see if memoized lookup provided information
+        if (memoized != 0)
+            return memoized;
+        // even case
         if (input % 2 == 0) {
             input /= 2;
         }
+        // odd case
         else {
             input = 3 * input + 1;
         }
         total_steps += 1;
     }
+    // update the memoization table for current input with total steps
+    computed[input-1] = total_steps;
     return total_steps;
 }
 
