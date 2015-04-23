@@ -13,7 +13,8 @@
 int main() {
     
     // arrays to the client and server messages
-    char message[100] , server_reply[100];
+    char message[100]; 
+    int server_reply;
     
     // declare server socket and client address struct
     int client_socket;
@@ -43,13 +44,14 @@ int main() {
         // write data to server
         write(client_socket, message, sizeof(message));
         // read data from server
-        read(client_socket, server_reply, sizeof(server_reply));
-        // print the data from server to stdout
-        puts(server_reply);
+        read(client_socket, &server_reply, sizeof(server_reply));
 
         // handle q encounters
         if (strstr(message, "q"))
             break;
+
+        // print the data from server to stdout
+        printf("Result: %d\n", server_reply);
     }     
     
     // client-side connection closing
