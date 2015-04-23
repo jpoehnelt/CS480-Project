@@ -11,6 +11,7 @@
 #include "main.h"
 
 int computed[MEMOIZE_LIMIT] = {0};
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int main() {
     // initialize current process as daemon proces
@@ -145,7 +146,9 @@ int three_a_one(int input) {
         total_steps += 1;
     }
     // update the memoization table for current input with total steps
+    pthread_mutex_lock(&mutex);
     computed[input-1] = total_steps;
+    pthread_mutex_unlock(&mutex);
     return total_steps;
 }
 
