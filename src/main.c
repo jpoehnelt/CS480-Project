@@ -10,6 +10,8 @@
 
 #include "main.h"
 
+int memoized[1000] = {0};
+
 int main() {
     // initialize current process as daemon proces
 	dameon_init();
@@ -81,10 +83,12 @@ void* handle_client(void* arg) {
 
     // keep communicating until 'q' encountered 
     while (1) {
+        int result = -1;
+
         // read into input buffer the data from client_socket
         read(client_socket, input, sizeof(input));
 
-        int i;
+        int i = 0;
         
         if (sscanf(input, "%d", &i) == 0) 
         {
@@ -92,6 +96,12 @@ void* handle_client(void* arg) {
         }
 
         syslog(LOG_NOTICE, "Integer: %d", i);
+
+        if (i != 0) {
+            result = three_a_one(i);
+        }
+
+        syslog(LOG_NOTICE, "3A + 1: %d", result);
 
         // still need to write back to client_socket when quitting
         if (strstr(input,"q"))
@@ -101,7 +111,7 @@ void* handle_client(void* arg) {
         }
         
         // write the read data into client_socket
-        write(client_socket, input, sizeof(input));
+        write(client_socket, &result, sizeof(int));
     }
     
     // close socket
@@ -111,3 +121,18 @@ void* handle_client(void* arg) {
     // terminate the client's thread
     pthread_exit(0);
 }
+
+int three_a_one(int input) {
+    int total_steps = 0;
+    while (input != 1) {
+        if (input % 2 == 0) {
+            input /= 2;
+        }
+        else {
+            input = 3 * input + 1;
+        }
+        total_steps += 1;
+    }
+    return total_steps;
+}
+

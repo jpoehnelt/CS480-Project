@@ -28,3 +28,4 @@
 
 void runserver();
 void *handle_client(void *arg);
+int three_a_one(int input);
