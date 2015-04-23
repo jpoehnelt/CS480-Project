@@ -84,6 +84,7 @@ void* handle_client(void* arg) {
 
     // keep communicating until 'q' encountered 
     while (1) {
+        // -1 indicates invalid input
         int result = -1;
 
         // read into input buffer the data from client_socket
@@ -99,7 +100,7 @@ void* handle_client(void* arg) {
         syslog(LOG_NOTICE, "Integer: %d", i);
 
         // 0 is 0 steps, don't memoize pass 1000 (array out of bounds)
-        if (i != 0 && i <= MEMOIZE_LIMIT) {
+        if (i > 0 && i <= MEMOIZE_LIMIT) {
             result = three_a_one(i);
         }
 

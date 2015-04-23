@@ -46,9 +46,17 @@ int main() {
         // read data from server
         read(client_socket, &server_reply, sizeof(server_reply));
 
+        // -1 means invalid input
+        if (server_reply == -1) {
+            puts("Please enter a positive integer\n");
+            continue;
+        }
+
         // handle q encounters
-        if (strstr(message, "q"))
+        if (strstr(message, "q")) {
+            puts("Quitting..");
             break;
+        }
 
         // print the data from server to stdout
         printf("Result: %d\n", server_reply);
