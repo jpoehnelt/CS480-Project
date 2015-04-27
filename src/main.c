@@ -100,7 +100,7 @@ void* handle_client(void* arg) {
         syslog(LOG_NOTICE, "Integer: %d", i);
 
         // 0 is 0 steps, don't memoize pass 1000 (array out of bounds)
-        if (i > 0 && i <= MEMOIZE_LIMIT) {
+        if (i > 0) {
             result = three_a_one(i);
         }
 
@@ -128,14 +128,16 @@ void* handle_client(void* arg) {
 
 int three_a_one(int input) {
     int total_steps = 0;
-    // lookup the memoization for particular input
-    int memoized = computed[input-1];
-    
+
     // stop at 1
     while (input != 1) {
         // see if memoized lookup provided information
-        if (memoized != 0)
-            return memoized;
+        if (input <= MEMOIZE_LIMIT) {
+            int memoized = computed[input-1];
+            if (memoized != 0) {
+                return memoized + total_steps;
+            }
+        }
         // even case
         if (input % 2 == 0) {
             input /= 2;
@@ -152,4 +154,6 @@ int three_a_one(int input) {
     pthread_mutex_unlock(&mutex);
     return total_steps;
 }
+
+
 
