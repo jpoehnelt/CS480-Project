@@ -90,21 +90,21 @@ void* handle_client(void* arg) {
         // read into input buffer the data from client_socket
         read(client_socket, input, sizeof(input));
 
-        int i = 0;
+        long l = 0;
         
-        if (sscanf(input, "%d", &i) == 0) 
+        if (sscanf(input, "%lu", &l) == 0) 
         {
-            syslog(LOG_NOTICE, "Could not convert %s to integer.", input);
+            syslog(LOG_NOTICE, "Could not convert %s to long.", input);
         }
 
-        syslog(LOG_NOTICE, "Integer: %d", i);
+        syslog(LOG_NOTICE, "Long: %lu", l);
 
         // 0 is 0 steps, don't memoize pass 1000 (array out of bounds)
-        if (i > 0) {
-            result = three_a_one(i);
+        if (l > 0) {
+            result = three_a_one(l);
         }
 
-        syslog(LOG_NOTICE, "3A + 1: %d", result);
+        syslog(LOG_NOTICE, "Result for 3A + 1 on %lu: %d", l, result);
 
         // still need to write back to client_socket when quitting
         if (strstr(input,"q"))
@@ -126,32 +126,41 @@ void* handle_client(void* arg) {
 }
 
 
-int three_a_one(int input) {
-    int total_steps = 0;
+int three_a_one(long input) {
+    int total_steps = 0, memoized = 0;
+    long next = input;
 
-    // stop at 1
-    while (input != 1) {
-        // see if memoized lookup provided information
-        if (input <= MEMOIZE_LIMIT) {
-            int memoized = computed[input-1];
-            if (memoized != 0) {
-                return memoized + total_steps;
-            }
-        }
-        // even case
-        if (input % 2 == 0) {
-            input /= 2;
-        }
-        // odd case
-        else {
-            input = 3 * input + 1;
-        }
-        total_steps += 1;
+    syslog (LOG_NOTICE, "Calculating 3A + 1 for %lu", input);
+     // base case
+    if (input <= 1) {
+        return 0;
     }
-    // update the memoization table for current input with total steps
-    pthread_mutex_lock(&mutex);
-    computed[input-1] = total_steps;
-    pthread_mutex_unlock(&mutex);
+
+    // memoized case
+    if ((int)input <= MEMOIZE_LIMIT && (memoized = computed[input]) != 0) {
+        syslog (LOG_NOTICE, "Found 3A + 1 for %lu in memoization table", input);
+        return memoized;
+    }
+
+    // even case
+    if (input % 2 == 0) {
+        next /= 2;
+    }
+    // odd case
+    else {
+        next = 3 * input + 1;
+    }
+
+    total_steps = three_a_one(next) + 1;
+
+    // save to memoization table
+    if ((int)input <= MEMOIZE_LIMIT) {
+        pthread_mutex_lock(&mutex);
+        computed[input] = total_steps;
+        syslog (LOG_NOTICE, "Set memoization table for %lu to %d", input, computed[input]); 
+        pthread_mutex_unlock(&mutex);
+    }
+
     return total_steps;
 }
 
